@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SentientAI | AI Product Sentiment Analyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .word-cloud-item:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#39b8fd",
+                        "primary": "#3525cd",
+                        "on-primary-container": "#dad7ff",
+                        "surface": "#f8f9ff",
+                        "surface-container": "#e5eeff",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#464555",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#67f4b7",
+                        "tertiary-container": "#006e4b",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary": "#005338",
+                        "on-secondary-container": "#004666",
+                        "surface-bright": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#4d44e3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-background": "#0b1c30",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#0f0069",
+                        "secondary-fixed-dim": "#89ceff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Background Shader -->
+<div class="fixed inset-0 -z-10 opacity-30 pointer-events-none">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full" -->
+<div class="absolute inset-0 w-full h-full" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create soft moving blobs
+    vec3 color1 = vec3(0.31, 0.27, 0.9); // Indigo #4F46E5
+    vec3 color2 = vec3(0.05, 0.65, 0.91); // Sky Blue #0EA5E9
+    vec3 color3 = vec3(0.06, 0.73, 0.51); // Emerald #10B981
+    
+    float noise1 = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 2.0 - u_time * 0.3);
+    float noise2 = sin(uv.y * 4.0 - u_time * 0.4) * cos(uv.x * 3.0 + u_time * 0.6);
+    
+    vec3 finalColor = mix(color1, color2, 0.5 + 0.5 * noise1);
+    finalColor = mix(finalColor, color3, 0.5 + 0.5 * noise2);
+    
+    // Soften and lighten for background use
+    finalColor = mix(vec3(0.97, 0.98, 0.99), finalColor, 0.08); // Light mode blend
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+</div>
+<!-- SideNavBar (Shared Component JSON Mapping) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col py-8 bg-surface/70 backdrop-blur-xl border-r border-white/10 shadow-lg w-64 md:flex hidden">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary-container flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md font-extrabold text-primary leading-none">SentientAI</h2>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mt-1">Enterprise Analytics</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<!-- Active State Mapping: Insights is active for Sentiment Analysis -->
+<a class="bg-primary-container/20 text-primary font-bold border-l-4 border-primary rounded-r-full p-3 flex items-center gap-4 transition-all" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Product Feed</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="font-label-md text-label-md">Competitors</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="px-6 py-6">
+<div class="glass-card rounded-2xl p-4 bg-primary/5 border-primary/10">
+<p class="font-label-md text-label-md font-bold text-primary mb-2">Upgrade to Pro</p>
+<p class="text-caption font-caption text-on-surface-variant mb-4">Unlock advanced neural sentiment mapping.</p>
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:shadow-lg transition-all active:scale-95">Upgrade</button>
+</div>
+</div>
+<div class="px-4 border-t border-outline-variant pt-4 space-y-1">
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-64 min-h-screen px-margin-desktop py-margin-desktop">
+<!-- Header -->
+<header class="mb-10 flex flex-col md:flex-row justify-between items-end gap-6">
+<div>
+<nav class="flex gap-2 text-on-surface-variant mb-2">
+<span class="font-label-md text-label-md">Product</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-label-md text-label-md font-bold text-primary">Sentiment Analyzer</span>
+</nav>
+<h1 class="font-display-lg text-display-lg text-on-surface">AI Product Sentiment Analysis</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">Real-time emotional resonance mapping for your flagship device.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-3 border border-outline rounded-xl font-label-md text-label-md hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">calendar_today</span>
+                    Last 30 Days
+                </button>
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl font-label-md text-label-md shadow-lg shadow-primary/20 hover:scale-105 transition-all">
+<span class="material-symbols-outlined">download</span>
+                    Export PDF
+                </button>
+</div>
+</header>
+<!-- Top Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-gutter">
+<!-- Confidence Meter -->
+<div class="md:col-span-4 glass-card rounded-[2rem] p-8 flex flex-col justify-between shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+<div>
+<h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant mb-6">Confidence Score</h3>
+<div class="relative w-48 h-48 mx-auto">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" stroke="url(#gradient)" stroke-dasharray="251.2" stroke-dashoffset="30.14" stroke-linecap="round" stroke-width="8"></circle>
+<defs>
+<lineargradient id="gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#3525cd"></stop>
+<stop offset="100%" stop-color="#39b8fd"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-display-lg font-display-lg text-primary">88%</span>
+<span class="text-caption font-caption text-on-surface-variant">High Accuracy</span>
+</div>
+</div>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant text-center mt-6">Based on 12.4k verified user responses with low noise variance.</p>
+</div>
+<!-- Primary Metrics -->
+<div class="md:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card rounded-[2rem] p-8 shadow-[0_4px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)] transition-all">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary mb-4">
+<span class="material-symbols-outlined">reviews</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-widest mb-1">Total Reviews</p>
+<h2 class="text-display-lg font-display-lg leading-tight">12,482</h2>
+<div class="flex items-center gap-1 text-tertiary font-bold mt-2">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span class="text-caption font-caption">+12% this week</span>
+</div>
+</div>
+<div class="glass-card rounded-[2rem] p-8 shadow-[0_4px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)] transition-all">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined">star_rate</span>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md uppercase tracking-widest mb-1">Avg Rating</p>
+<h2 class="text-display-lg font-display-lg leading-tight">4.7</h2>
+<div class="flex gap-0.5 text-secondary-container mt-2">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div></div></div></section></main></body></html>

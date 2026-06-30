@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SentientAI - Product Sentiment Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#39b8fd",
+                    "primary": "#3525cd",
+                    "on-primary-container": "#dad7ff",
+                    "surface": "#f8f9ff",
+                    "surface-container": "#e5eeff",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#464555",
+                    "tertiary-fixed": "#6ffbbe",
+                    "inverse-primary": "#c3c0ff",
+                    "on-tertiary-container": "#67f4b7",
+                    "tertiary-container": "#006e4b",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#eff4ff",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#dce9ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "outline": "#777587",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "outline-variant": "#c7c4d8",
+                    "surface-container-highest": "#d3e4fe",
+                    "tertiary": "#005338",
+                    "on-secondary-container": "#004666",
+                    "surface-bright": "#f8f9ff",
+                    "background": "#f8f9ff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "primary-container": "#4f46e5",
+                    "inverse-surface": "#213145",
+                    "surface-tint": "#4d44e3",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary": "#006591",
+                    "on-tertiary-fixed": "#002113",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-secondary-fixed": "#001e2f",
+                    "on-background": "#0b1c30",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "surface-variant": "#d3e4fe",
+                    "surface-dim": "#cbdbf5",
+                    "primary-fixed": "#e2dfff",
+                    "on-surface": "#0b1c30",
+                    "on-primary-fixed": "#0f0069",
+                    "secondary-fixed-dim": "#89ceff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "unit": "8px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .result-card-hover:hover {
+            transform: translateY(-4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating { animation: float 6s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20 bg-white/70 dark:bg-navy-900/70 backdrop-blur-xl border-b border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.05)]">
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-display-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-container">SentientAI</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors duration-300" href="#">Platform</a>
+<a class="font-label-md text-label-md text-primary dark:text-inverse-primary font-bold border-b-2 border-primary" href="#">Solutions</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors duration-300" href="#">Enterprise</a>
+<a class="font-label-md text-label-md text-on-surface-variant dark:text-outline-variant font-medium hover:text-primary transition-colors duration-300" href="#">Pricing</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary p-2 hover:bg-primary/10 rounded-full transition-all">notifications</button>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-primary/10 rounded-full transition-all">settings</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md scale-95 active:opacity-80 transition-all">Sign In</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-32 pb-20 relative overflow-hidden">
+<!-- Background Shader -->
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full opacity-40 -z-10" -->
+<div class="absolute inset-0 w-full h-full opacity-40 -z-10" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create soft moving blobs
+    vec3 color1 = vec3(0.31, 0.27, 0.9); // Indigo #4F46E5
+    vec3 color2 = vec3(0.05, 0.65, 0.91); // Sky Blue #0EA5E9
+    vec3 color3 = vec3(0.06, 0.73, 0.51); // Emerald #10B981
+    
+    float noise1 = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 2.0 - u_time * 0.3);
+    float noise2 = sin(uv.y * 4.0 - u_time * 0.4) * cos(uv.x * 3.0 + u_time * 0.6);
+    
+    vec3 finalColor = mix(color1, color2, 0.5 + 0.5 * noise1);
+    finalColor = mix(finalColor, color3, 0.5 + 0.5 * noise2);
+    
+    // Soften and lighten for background use
+    finalColor = mix(vec3(0.97, 0.98, 0.99), finalColor, 0.08); // Light mode blend
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<!-- Hero Search Section -->
+<section class="flex flex-col items-center justify-center text-center mb-16">
+<h1 class="font-display-lg text-display-lg mb-4 text-on-surface">Analyze Sentiment. Discover Truth.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-10">Advanced AI sentiment processing for Amazon and Flipkart products. Turn millions of reviews into actionable emotional insights in seconds.</p>
+<div class="w-full max-w-3xl glass-card rounded-[2rem] p-2 flex items-center shadow-2xl">
+<div class="flex-grow flex items-center px-6">
+<span class="material-symbols-outlined text-primary text-2xl mr-4">psychology</span>
+<input class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-outline py-4" placeholder="Search products..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary flex items-center gap-2 px-8 py-4 rounded-[1.5rem] font-label-md text-label-md hover:shadow-lg transition-all active:scale-95 group">
+<span>Search Analyzer</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="mb-12">
+<div class="flex flex-wrap items-center justify-between gap-6 glass-card p-6 rounded-2xl">
+<div class="flex flex-wrap gap-8">
+<!-- Platform Filter -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-outline">Platform</span>
+<div class="flex bg-surface-container rounded-lg p-1">
+<button class="px-4 py-1.5 rounded-md text-label-md font-medium bg-white shadow-sm text-primary">Both</button>
+<button class="px-4 py-1.5 rounded-md text-label-md font-medium text-on-surface-variant hover:text-primary transition-colors">Amazon</button>
+<button class="px-4 py-1.5 rounded-md text-label-md font-medium text-on-surface-variant hover:text-primary transition-colors">Flipkart</button>
+</div>
+</div>
+<!-- Sort By -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-outline">Sort By</span>
+<select class="bg-surface-container border-none rounded-lg text-label-md font-medium text-on-surface py-2 pr-10 focus:ring-primary/20">
+<option>Most Relevant</option>
+<option>Highest Sentiment</option>
+<option>Popularity</option>
+<option>Review Volume</option>
+</select>
+</div>
+<!-- Min Rating -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-outline">Min Rating</span>
+<div class="flex items-center gap-2">
+<input class="accent-primary w-32" max="5" min="1" step="0.5" type="range"/>
+<span class="font-label-md text-label-md text-on-surface">4.0+</span>
+</div>
+</div>
+<!-- Max Reviews -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-outline">Max Reviews</span>
+<div class="flex items-center gap-2">
+<span class="font-caption text-caption text-outline">100</span>
+<input class="accent-primary w-32" max="10000" min="100" step="500" type="range"/>
+<span class="font-label-md text-label-md text-on-surface">10k+</span>
+</div>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary font-label-md text-label-md hover:bg-primary/5 px-4 py-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">tune</span>
+<span>Advanced Filters</span>
+</button>
+</div>
+</section>
+<!-- Results Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Product Card 1 -->
+<div class="glass-card rounded-3xl overflow-hidden result-card-hover transition-all duration-300 flex flex-col group">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A professional, high-resolution product shot of sleek noise-canceling headphones in a minimalist studio setting. The lighting is soft and artistic, using cool blue and deep purple tones to match a premium tech aesthetic. The composition is clean with a shallow depth of field, emphasizing the intricate textures of the hardware in a modern light-mode environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa3smV-_RVg0-YrYOTntN2aGzbJJZrTWzeX0wCMXxUf7V7tBI4ab74I0cncJ9CsOfKQc6dtJ_zNNThzUXvhWQjgdtg14J2k-8BUqnokF75PIy_Rzzuu59peg8GSw4C8e5Rbe7GRCB7ldC2Bmje4kERZcyVl5SRosRamtl13ORotW44AFVFAq00UXU73Typ2JUINCE40udcvYXsQjolcUUmNAaNHu508WDV00tMSYza8q-BdTwzQm3azgW23TirhbOeMv7aIcbKTKDa"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-full text-caption font-bold shadow-lg">94% Positive</div>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">SonicPro X10 Wireless</h3>
+<span class="font-label-md text-label-md text-secondary-container bg-secondary-container/10 px-2 py-0.5 rounded">Amazon</span>
+</div>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-outline-variant text-sm">star</span>
+<span class="ml-2 font-caption text-caption text-outline">(12.4k reviews)</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline">Price</span>
+<span class="font-headline-md text-headline-md text-on-surface">$249.00</span>
+</div>
+<button class="bg-surface-container hover:bg-primary hover:text-on-primary p-3 rounded-xl transition-all group-hover:bg-primary group-hover:text-on-primary">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="glass-card rounded-3xl overflow-hidden result-card-hover transition-all duration-300 flex flex-col group">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close-up commercial photography of a luxury smartwatch with a vibrant OLED display showing fitness metrics. The watch features a brushed titanium finish and sits against a soft-focus background of a high-end office interior. The image is bright and airy with high-key lighting, maintaining a clean, premium brand identity with subtle indigo accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCXm_Or6ezGnP8uxgft-50DunxadcIJNT2Z102J7G_g7aNYENshTV2BLrfenM3FDonjXjos-0FvAZuW_GVdamvZ26thyY-DBOAyXnJpWknPCBeq8fK0vOaWcEkCONgvOndxtZHu3A2hhD1rdkQYvOM70hJxJvtA2v255ek_g157833RitVOoJiXGy5-9wIGVuuez06_WKZintVgpEuWWwqfQICqnzQAFGWttxm2-xGejjdECf9o3xV-GyGBkpyTGY6OwJIW3MdkPw5"/>
+<div class="absolute top-4 left-4 bg-tertiary text-on-tertiary px-3 py-1 rounded-full text-caption font-bold shadow-lg">82% Positive</div>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-outline">favorite</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">Zenith Series 7 Watch</h3>
+<span class="font-label-md text-label-md text-on-tertiary-container bg-tertiary-container/10 px-2 py-0.5 rounded">Flipkart</span>
+</div>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 0.5;">star_half</span>
+<span class="ml-2 font-caption text-caption text-outline">(8.2k reviews)</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline">Price</span>
+<span class="font-headline-md text-headline-md text-on-surface">$399.00</span>
+</div>
+<button class="bg-surface-container hover:bg-primary hover:text-on-primary p-3 rounded-xl transition-all group-hover:bg-primary group-hover:text-on-primary">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 (Featured Suggestion) -->
+<div class="relative rounded-3xl overflow-hidden result-card-hover transition-all duration-300 flex flex-col group bg-primary p-[1px]">
+<div class="bg-white/95 rounded-[1.4rem] h-full flex flex-col overflow-hidden">
+<div class="h-64 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Dynamic shot of a high-performance gaming laptop with glowing RGB keyboard, showcasing its slim profile and premium build. The setting is a darkened futuristic gaming room with subtle neon purple and blue glow reflecting off the laptop's metallic surface. The image is crisp and detailed, emphasizing high-end engineering and sophisticated AI capabilities." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8uOrQ2c2dRA0PPGP6uMoxHm6QqIHULlwxvOwYgalpoAjtRUkMz0NXTaZvbZJx-7cOcuj4-_Qu2FXg28VIdFJY0pqnDe1hv6WHQGq4rmp3UvI2KHwrzeQAIYiuN6ZE9RmtpsncAs2KSbYF0KBj08mAVL7yz8ziB5rcJC1InGAAciuNcroXf58oy3PCn7ALYzPaqOJxm_znjzNF0OT2-cyk_yoB6nu6JdD3h6HnooYVurxs98AAX5EiiUtN3MIPWbhUCH7R_gLvChXG"/>
+<div class="absolute top-4 left-4 bg-error text-on-error px-3 py-1 rounded-full text-caption font-bold shadow-lg">Trending Analysis</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">AeroBlade G15 Laptop</h3>
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-2 py-0.5 rounded">Both</span>
+</div>
+<div class="flex items-center gap-1 mb-4">
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="ml-2 font-caption text-caption text-outline">(2.1k reviews)</span>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-caption text-caption text-outline">Price</span>
+<span class="font-headline-md text-headline-md text-on-surface">$1,299.00</span>
+</div>
+<button class="bg-primary text-on-primary p-3 rounded-xl shadow-lg shadow-primary/20 transition-all">
+<span class="material-symbols-outlined">insights</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Suggestion Footer -->
+<div class="mt-20 glass-card p-12 rounded-[3rem] text-center floating">
+<h2 class="font-headline-lg text-headline-lg mb-4 text-on-surface">Not finding what you need?</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl mx-auto">Upload your own review dataset or paste a direct product link to generate a deep-dive sentiment report instantly.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-md text-label-md hover:shadow-xl transition-all">Paste Product Link</button>
+<button class="bg-white border border-outline-variant text-on-surface px-8 py-3 rounded-full font-label-md text-label-md hover:bg-surface-container transition-all">Upload CSV/Excel</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-margin-desktop bg-surface-container-lowest dark:bg-background border-t border-outline-variant">
+<div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">SentientAI</span>
+<span class="font-caption text-caption text-on-surface-variant">© 2024 SentientAI Technologies. All rights reserved.</span>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">API Docs</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Status</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined">hub</span>
+</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for the search bar
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput?.closest('.glass-card');
+        
+        searchInput?.addEventListener('focus', () => {
+            searchContainer.classList.add('ring-4', 'ring-primary/10', 'border-primary/30');
+            searchContainer.style.transform = 'scale(1.02)';
+            searchContainer.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        });
+
+        searchInput?.addEventListener('blur', () => {
+            searchContainer.classList.remove('ring-4', 'ring-primary/10', 'border-primary/30');
+            searchContainer.style.transform = 'scale(1)';
+        });
+
+        // Grid Entrance Animation
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    entry.target.style.transition = `all 0.6s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.1}s`;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.result-card-hover').forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(40px)";
+            observer.observe(card);
+        });
+    </script>
+</body></html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - SentientAI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#39b8fd",
+                      "primary": "#3525cd",
+                      "on-primary-container": "#dad7ff",
+                      "surface": "#f8f9ff",
+                      "surface-container": "#e5eeff",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#464555",
+                      "tertiary-fixed": "#6ffbbe",
+                      "inverse-primary": "#c3c0ff",
+                      "on-tertiary-container": "#67f4b7",
+                      "tertiary-container": "#006e4b",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#eff4ff",
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#dce9ff",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "outline": "#777587",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "outline-variant": "#c7c4d8",
+                      "surface-container-highest": "#d3e4fe",
+                      "tertiary": "#005338",
+                      "on-secondary-container": "#004666",
+                      "surface-bright": "#f8f9ff",
+                      "background": "#f8f9ff",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "primary-container": "#4f46e5",
+                      "inverse-surface": "#213145",
+                      "surface-tint": "#4d44e3",
+                      "inverse-on-surface": "#eaf1ff",
+                      "secondary": "#006591",
+                      "on-tertiary-fixed": "#002113",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-secondary-fixed": "#001e2f",
+                      "on-background": "#0b1c30",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#c9e6ff",
+                      "on-secondary-fixed-variant": "#004c6e",
+                      "surface-variant": "#d3e4fe",
+                      "surface-dim": "#cbdbf5",
+                      "primary-fixed": "#e2dfff",
+                      "on-surface": "#0b1c30",
+                      "on-primary-fixed": "#0f0069",
+                      "secondary-fixed-dim": "#89ceff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "caption": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .dark .glass-panel {
+            background: rgba(33, 49, 69, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .settings-input {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid #c7c4d8;
+            transition: all 0.3s ease;
+        }
+        .settings-input:focus {
+            outline: none;
+            border-color: #3525cd;
+            box-shadow: 0 0 0 4px rgba(53, 37, 205, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md transition-colors duration-500 overflow-x-hidden">
+<!-- Background Shader -->
+<div class="fixed inset-0 z-0">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="absolute inset-0 w-full h-full opacity-40" -->
+<div class="absolute inset-0 w-full h-full opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create soft moving blobs
+    vec3 color1 = vec3(0.31, 0.27, 0.9); // Indigo #4F46E5
+    vec3 color2 = vec3(0.05, 0.65, 0.91); // Sky Blue #0EA5E9
+    vec3 color3 = vec3(0.06, 0.73, 0.51); // Emerald #10B981
+    
+    float noise1 = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 2.0 - u_time * 0.3);
+    float noise2 = sin(uv.y * 4.0 - u_time * 0.4) * cos(uv.x * 3.0 + u_time * 0.6);
+    
+    vec3 finalColor = mix(color1, color2, 0.5 + 0.5 * noise1);
+    finalColor = mix(finalColor, color3, 0.5 + 0.5 * noise2);
+    
+    // Soften and lighten for background use
+    finalColor = mix(vec3(0.97, 0.98, 0.99), finalColor, 0.08); // Light mode blend
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+</div>
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col py-8 bg-surface/70 dark:bg-inverse-surface/70 backdrop-blur-xl border-r border-white/10 shadow-lg w-64 translate-x-0 transition-transform">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-extrabold text-primary">SentientAI</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Enterprise Analytics</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">psychology</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
+<span class="font-label-md text-label-md">Product Feed</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">compare_arrows</span>
+<span class="font-label-md text-label-md">Competitors</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<!-- Active State determined as this is a Settings Page often found under personal controls, though not explicitly in the nav list, we keep the SideNav logic -->
+</nav>
+<div class="px-4 py-6 mt-auto space-y-2 border-t border-white/10">
+<a class="bg-primary-container/20 text-primary font-bold border-l-4 border-primary rounded-r-full p-3 flex items-center gap-4" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="text-on-surface-variant dark:text-outline-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<button class="w-full mt-4 bg-primary text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">stars</span>
+<span>Upgrade to Pro</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen relative z-10 px-margin-desktop py-12 max-w-container-max">
+<header class="mb-12">
+<h2 class="font-display-lg text-display-lg text-on-surface">Settings</h2>
+<p class="text-on-surface-variant text-body-lg mt-2">Manage your AI Product Sentiment Analyzer preferences and account security.</p>
+</header>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Profile Section -->
+<section class="col-span-12 md:col-span-8 glass-panel rounded-3xl p-8">
+<div class="flex items-start justify-between mb-8">
+<div class="flex items-center gap-6">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full overflow-hidden border-4 border-primary-container/30">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a modern software engineer in a bright tech office environment. The person is smiling confidently, wearing a dark polo shirt. The background is softly blurred with hints of high-tech monitors and glass partitions. The lighting is clean, bright, and airy to match a premium light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi9fsZoeZjg00P5aoXo7FBt6G6tCAqEyQIEvsiaytHN2BZJt2Gn2NtAsIuwOH8YZreD6xzLsVrlYxMIouo86QUeJhY9yhKrzh-l_zxmrc5HsHybUbhoaJNsQ0yKZMeunqhkvlfVGTZXENbQJOfYmGxz30dlQGKTPhMeIi5RSWmFBD77hCooj1Aa9PlAImGnSxBxeWfIsEgkpyZkoHkgo5NfeKLTFlOgtdTQivYlupy34eMhyFru3KjvokHUVwPmyZ3uSo4-H5WmTvS"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md">Personal Profile</h3>
+<p class="text-on-surface-variant font-label-md">Public identity and contact information</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md hover:opacity-90 transition-opacity">Save Changes</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Display Name</label>
+<input class="w-full settings-input rounded-xl px-4 py-3 text-on-surface" type="text" value="Alex Rivera"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Email Address</label>
+<input class="w-full settings-input rounded-xl px-4 py-3 text-on-surface" type="email" value="alex.rivera@sentientai.io"/>
+</div>
+<div class="col-span-1 md:col-span-2 space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Professional Bio</label>
+<textarea class="w-full settings-input rounded-xl px-4 py-3 text-on-surface resize-none" rows="3">Senior Product Manager overseeing the Sentiment Intelligence pipeline. Passionate about LLM interpretability and emotional AI.</textarea>
+</div>
+</div>
+</section>
+<!-- Theme & Appearance -->
+<section class="col-span-12 md:col-span-4 space-y-gutter">
+<div class="glass-panel rounded-3xl p-8 h-full">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">palette</span>
+<h3 class="font-headline-sm text-headline-sm">Appearance</h3>
+</div>
+<div class="space-y-6">
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+<span class="font-label-md text-on-surface">Dark Mode</span>
+</div>
+<button class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors duration-300 focus:outline-none" onclick="document.documentElement.classList.toggle('dark')">
+<div class="absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform duration-300 translate-x-0 dark:translate-x-6"></div>
+</button>
+</div>
+<div class="space-y-4">
+<p class="font-label-md text-on-surface-variant ml-1">Accent Color</p>
+<div class="flex gap-3">
+<button class="w-8 h-8 rounded-full bg-primary border-2 border-white shadow-sm ring-2 ring-primary"></button>
+<button class="w-8 h-8 rounded-full bg-secondary-container border-2 border-white shadow-sm"></button>
+<button class="w-8 h-8 rounded-full bg-tertiary-container border-2 border-white shadow-sm"></button>
+<button class="w-8 h-8 rounded-full bg-error border-2 border-white shadow-sm"></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- API Configuration -->
+<section class="col-span-12 md:col-span-7 glass-panel rounded-3xl p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">api</span>
+<h3 class="font-headline-sm text-headline-sm">API Configuration</h3>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Connected</span>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">API Endpoint</label>
+<div class="flex gap-3">
+<input class="flex-1 settings-input rounded-xl px-4 py-3 text-on-surface font-mono text-sm opacity-70" readonly="" type="text" value="https://api.sentientai.io/v1/analyze"/>
+<button class="p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-primary">content_copy</span>
+</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Access Token</label>
+<div class="flex gap-3">
+<input class="flex-1 settings-input rounded-xl px-4 py-3 text-on-surface font-mono text-sm" type="password" value="sk_live_51M0A2Xv2SentientIntelligenceToken"/>
+<button class="p-3 bg-surface-container rounded-xl hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 pt-2">
+<button class="flex-1 border border-primary text-primary py-3 rounded-xl font-bold hover:bg-primary/5 transition-all">Regenerate Key</button>
+<button class="flex-1 bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">Test Connection</button>
+</div>
+</div>
+</section>
+<!-- Language & Region -->
+<section class="col-span-12 md:col-span-5 glass-panel rounded-3xl p-8">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">language</span>
+<h3 class="font-headline-sm text-headline-sm">Language &amp; Region</h3>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Interface Language</label>
+<select class="w-full settings-input rounded-xl px-4 py-3 text-on-surface appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23464555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat">
+<option>English (US)</option>
+<option>Spanish (LatAm)</option>
+<option>French (France)</option>
+<option>Japanese (Tokyo)</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-on-surface-variant block ml-1">Timezone</label>
+<select class="w-full settings-input rounded-xl px-4 py-3 text-on-surface appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23464555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat">
+<option>(GMT-08:00) Pacific Time</option>
+<option>(GMT-05:00) Eastern Time</option>
+<option>(GMT+00:00) UTC</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section class="col-span-12 glass-panel rounded-3xl p-8">
+<div class="flex items-center gap-3 mb-10">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<h3 class="font-headline-sm text-headline-sm">Notification Center</h3>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="p-6 bg-surface-container/50 rounded-2xl border border-white/20">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">mail</span>
+</div>
+<button class="w-12 h-6 rounded-full bg-primary relative transition-colors duration-300">
+<div class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white"></div>
+</button>
+</div>
+<h4 class="font-bold text-on-surface">Email Digests</h4>
+<p class="text-on-surface-variant text-sm mt-1">Weekly reports on sentiment trends and anomalies.</p>
+</div>
+<div class="p-6 bg-surface-container/50 rounded-2xl border border-white/20">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">bolt</span>
+</div>
+<button class="w-12 h-6 rounded-full bg-primary relative transition-colors duration-300">
+<div class="absolute top-1 right-1 w-4 h-4 rounded-full bg-white"></div>
+</button>
+</div>
+<h4 class="font-bold text-on-surface">Real-time Alerts</h4>
+<p class="text-on-surface-variant text-sm mt-1">Immediate notification of sudden negative shifts.</p>
+</div>
+<div class="p-6 bg-surface-container/50 rounded-2xl border border-white/20">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">chat</span>
+</div>
+<button class="w-12 h-6 rounded-full bg-outline-variant relative transition-colors duration-300">
+<div class="absolute top-1 left-1 w-4 h-4 rounded-full bg-white"></div>
+</button>
+</div>
+<h4 class="font-bold text-on-surface">Slack Integration</h4>
+<p class="text-on-surface-variant text-sm mt-1">Forward important insights directly to your team.</p>
+</div>
+</div>
+</section>
+</div>
+<footer class="mt-16 py-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center text-on-surface-variant">
+<p class="font-caption text-caption">© 2024 SentientAI Technologies. All rights reserved.</p>
+<div class="flex gap-8 mt-4 md:mt-0">
+<a class="font-caption text-caption hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-caption text-caption hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-caption text-caption hover:text-primary transition-colors" href="#">API Docs</a>
+<a class="font-caption text-caption hover:text-primary transition-colors" href="#">Status</a>
+</div>
+</footer>
+</main>
+<!-- Global Interaction Scripts -->
+<script>
+        // Micro-interactions for form focus
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.parentElement.querySelector('label')?.classList.add('text-primary');
+            });
+            el.addEventListener('blur', () => {
+                el.parentElement.querySelector('label')?.classList.remove('text-primary');
+            });
+        });
+
+        // Simple Toggle interaction logic
+        document.querySelectorAll('.rounded-full.relative').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const circle = toggle.querySelector('div');
+                const isOff = circle.classList.contains('translate-x-0') || circle.classList.contains('left-1');
+                
+                if (toggle.classList.contains('bg-outline-variant')) {
+                    toggle.classList.replace('bg-outline-variant', 'bg-primary');
+                    circle.style.transform = 'translateX(24px)';
+                } else {
+                    toggle.classList.replace('bg-primary', 'bg-outline-variant');
+                    circle.style.transform = 'translateX(0px)';
+                }
+            });
+        });
+    </script>
+</body></html>

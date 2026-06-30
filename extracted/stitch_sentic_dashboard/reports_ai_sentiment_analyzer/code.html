@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reports - SentientAI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#39b8fd",
+                        "primary": "#3525cd",
+                        "on-primary-container": "#dad7ff",
+                        "surface": "#f8f9ff",
+                        "surface-container": "#e5eeff",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#464555",
+                        "tertiary-fixed": "#6ffbbe",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#67f4b7",
+                        "tertiary-container": "#006e4b",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary": "#005338",
+                        "on-secondary-container": "#004666",
+                        "surface-bright": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#213145",
+                        "surface-tint": "#4d44e3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary": "#006591",
+                        "on-tertiary-fixed": "#002113",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary-fixed": "#001e2f",
+                        "on-background": "#0b1c30",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#c9e6ff",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-fixed": "#0f0069",
+                        "secondary-fixed-dim": "#89ceff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-indicator {
+            position: absolute;
+            left: 0;
+            width: 4px;
+            height: 24px;
+            background-color: #3525cd;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-background min-h-screen">
+<!-- STITCH_SHADER_START:ANIMATION_1 class="fixed inset-0 w-full h-full -z-10 opacity-30" -->
+<div class="fixed inset-0 w-full h-full -z-10 opacity-30" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_1" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_1');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create soft moving blobs
+    vec3 color1 = vec3(0.31, 0.27, 0.9); // Indigo #4F46E5
+    vec3 color2 = vec3(0.05, 0.65, 0.91); // Sky Blue #0EA5E9
+    vec3 color3 = vec3(0.06, 0.73, 0.51); // Emerald #10B981
+    
+    float noise1 = sin(uv.x * 3.0 + u_time * 0.5) * cos(uv.y * 2.0 - u_time * 0.3);
+    float noise2 = sin(uv.y * 4.0 - u_time * 0.4) * cos(uv.x * 3.0 + u_time * 0.6);
+    
+    vec3 finalColor = mix(color1, color2, 0.5 + 0.5 * noise1);
+    finalColor = mix(finalColor, color3, 0.5 + 0.5 * noise2);
+    
+    // Soften and lighten for background use
+    finalColor = mix(vec3(0.97, 0.98, 0.99), finalColor, 0.08); // Light mode blend
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_1 -->
+<div class="flex">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col py-8 w-64 bg-surface/70 backdrop-blur-xl border-r border-white/10 shadow-lg transition-transform md:translate-x-0 -translate-x-full" id="sidebar">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-extrabold text-primary leading-tight">SentientAI</h1>
+<p class="text-[10px] uppercase tracking-widest text-outline">Enterprise Analytics</p>
+</div>
+</div>
+<nav class="flex-grow space-y-2 px-3">
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">psychology</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">inventory_2</span>
+<span class="font-label-md text-label-md">Product Feed</span>
+</a>
+<a class="text-on-surface-variant p-3 flex items-center gap-4 hover:bg-surface-container-high/50 transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">compare_arrows</span>
+<span class="font-label-md text-label-md">Competitors</span>
+</a>
+<!-- Active Item -->
+<a class="bg-primary-container/20 text-primary font-bold border-l-4 border-primary rounded-r-full p-3 flex items-center gap-4 relative" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="px-6 mt-auto space-y-4">
+<div class="glass-card p-4 rounded-2xl bg-primary/5 border-primary/10">
+<p class="font-label-md text-label-md text-primary font-bold mb-1">Upgrade to Pro</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">Unlock advanced sentiment modeling and unlimited PDF exports.</p>
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-md active:scale-95 transition-all">Upgrade Now</button>
+</div>
+<div class="space-y-1">
+<a class="text-on-surface-variant p-2 flex items-center gap-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span class="text-sm">Help Center</span>
+</a>
+<a class="text-on-surface-variant p-2 flex items-center gap-4 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">logout</span>
+<span class="text-sm">Log Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-0 md:ml-64 p-margin-desktop min-h-screen">
+<!-- Header Section -->
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex items-center gap-2 text-outline-variant mb-2">
+<span class="text-xs font-medium">Dashboard</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-xs font-semibold text-primary">Reports</span>
+</nav>
+<h2 class="font-display-lg text-display-lg text-on-background">AI Product Sentiment Reports</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Aggregate and export deep-intelligence data from your product sentiment analysis. Generate executive summaries instantly with LLM integration.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 rounded-xl glass-card flex items-center gap-2 text-primary font-semibold hover:bg-white transition-all active:scale-95">
+<span class="material-symbols-outlined">filter_list</span>
+<span>Filters</span>
+</button>
+<button class="px-6 py-3 rounded-xl bg-primary text-on-primary flex items-center gap-2 font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+<span>New Report</span>
+</button>
+</div>
+</header>
+<!-- Quick Export Cards (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-10">
+<!-- AI Summary Card -->
+<div class="md:col-span-2 glass-card p-8 rounded-3xl relative overflow-hidden group cursor-pointer border-primary/20 bg-gradient-to-br from-white/90 to-primary/5">
+<div class="relative z-10 h-full flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-2xl bg-primary text-on-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-2xl">auto_awesome</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">Generate AI Summary</h3>
+<p class="text-on-surface-variant font-body-md opacity-80 mb-6">Automatically distill thousands of customer sentiments into a 3-paragraph executive brief using GPT-4o integration.</p>
+</div>
+<div class="flex items-center gap-2 text-primary font-bold group-hover:gap-4 transition-all">
+<span>Process Intelligence</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+<!-- Background Illustration -->
+<div class="absolute -right-10 -bottom-10 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[180px]">neurology</span>
+</div>
+</div>
+<!-- PDF Card -->
+<div class="glass-card p-6 rounded-3xl group cursor-pointer hover:border-primary/40 transition-all flex flex-col justify-between">
+<div>
+<div class="w-10 h-10 rounded-xl bg-error/10 text-error flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<h4 class="font-headline-sm text-lg font-bold mb-1">Export PDF</h4>
+<p class="text-sm text-on-surface-variant opacity-70">Ready-to-present visual charts and detailed sentiment heatmaps.</p>
+</div>
+<div class="mt-6 flex justify-end">
+<div class="p-2 rounded-full border border-outline-variant group-hover:bg-primary group-hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">download</span>
+</div>
+</div>
+</div>
+<!-- CSV/Excel Column -->
+<div class="flex flex-col gap-gutter">
+<div class="glass-card p-5 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/80 transition-all border-l-4 border-l-secondary-container">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined">csv</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-sm">Export CSV</h4>
+<p class="text-xs text-on-surface-variant">Raw tabular data</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">download</span>
+</div>
+<div class="glass-card p-5 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/80 transition-all border-l-4 border-l-tertiary-container">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined">table_view</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-sm">Export Excel</h4>
+<p class="text-xs text-on-surface-variant">Formatted spreadsheets</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">download</span>
+</div>
+</div>
+</section>
+<!-- Report History Table -->
+<section class="glass-card rounded-3xl overflow-hidden mb-margin-desktop">
+<div class="p-6 border-b border-white/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h3 class="font-headline-sm text-xl font-bold">Report History</h3>
+<p class="text-sm text-on-surface-variant">Review and re-download previously generated intelligence packages.</p>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl text-sm w-full md:w-64 focus:ring-2 focus:ring-primary/50" placeholder="Search reports..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/50 text-outline uppercase text-[10px] tracking-widest font-bold">
+<th class="px-6 py-4">Report Name</th>
+<th class="px-6 py-4">Date Generated</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/10">
+<!-- Row 1 -->
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+</div>
+<span class="font-medium text-sm">Q3 Sentiment Analysis - Mobile App</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Oct 12, 2024</td>
+<td class="px-6 py-4 text-sm font-semibold">PDF + AI Brief</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary text-[10px] font-bold uppercase tracking-wide flex items-center w-fit gap-1">
+<span class="w-1 h-1 rounded-full bg-tertiary"></span> Ready
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-outline transition-all"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-primary transition-all"><span class="material-symbols-outlined text-lg">download</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+</div>
+<span class="font-medium text-sm">Social Feedback Sync - All Products</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Oct 10, 2024</td>
+<td class="px-6 py-4 text-sm font-semibold">CSV Bulk</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary text-[10px] font-bold uppercase tracking-wide flex items-center w-fit gap-1">
+<span class="w-1 h-1 rounded-full bg-tertiary"></span> Ready
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-outline transition-all"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-primary transition-all"><span class="material-symbols-outlined text-lg">download</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+</div>
+<span class="font-medium text-sm">Competitor Comparison Report</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Oct 08, 2024</td>
+<td class="px-6 py-4 text-sm font-semibold">Excel (Full)</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-primary-container/10 text-primary text-[10px] font-bold uppercase tracking-wide flex items-center w-fit gap-1 animate-pulse">
+<span class="w-1 h-1 rounded-full bg-primary"></span> Processing
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 opacity-50 cursor-not-allowed text-outline"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 opacity-50 cursor-not-allowed text-outline"><span class="material-symbols-outlined text-lg">download</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/40 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">description</span>
+</div>
+<span class="font-medium text-sm">Archived: FY23 Sentiment Wrap</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Sep 24, 2024</td>
+<td class="px-6 py-4 text-sm font-semibold">PDF</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-on-surface-variant/10 text-on-surface-variant text-[10px] font-bold uppercase tracking-wide flex items-center w-fit gap-1">
+<span class="w-1 h-1 rounded-full bg-on-surface-variant"></span> Archived
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-outline transition-all"><span class="material-symbols-outlined text-lg">restore</span></button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-primary transition-all"><span class="material-symbols-outlined text-lg">download</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-surface-container-low/50 flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium">Showing 1 to 4 of 28 reports</p>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-outline hover:bg-white transition-all"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center text-sm font-bold">1</button>
+<button class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-outline hover:bg-white transition-all text-sm">2</button>
+<button class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-outline hover:bg-white transition-all text-sm">3</button>
+<button class="w-8 h-8 rounded-lg border border-white/20 flex items-center justify-center text-outline hover:bg-white transition-all"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</section>
+<!-- Stats Footer Insights -->
+<footer class="w-full py-12 flex flex-col md:flex-row justify-between items-center max-w-container-max border-t border-outline-variant">
+<div class="mb-6 md:mb-0">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">SentientAI</h1>
+<p class="font-caption text-caption text-on-surface-variant mt-1">© 2024 SentientAI Technologies. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">API Docs</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary-container transition-colors" href="#">Status</a>
+</div>
+</footer>
+</main>
+</div>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.98)';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>
