@@ -320,73 +320,6 @@ def get_all_products():
 
 
 # ──────────────────────────────────────────────
-#  GET PRODUCTS SUMMARY (grouped, for Product Feed)
-# ──────────────────────────────────────────────
-
-def get_products_summary(search_term=""):
-    """
-    Returns product-level summary (not individual reviews).
-    Groups by product_name and calculates sentiment %.
-    """
-    conn = get_connection()
-    if not conn:
-        return []
-
-    try:
-        cur = conn.cursor(cursor_factory=RealDictCursor)
-
-        cur.execute("""
-            SELECT 
-                p.id,
-                p.product_name,
-                p.source,
-                p.title,
-                p.price,
-                p.overall_rating,
-                p.total_reviews,
-                COUNT(r.id) as review_count,
-                SUM(CASE WHEN r.sentiment = 'Positive' THEN 1 ELSE 0 END) as positive_count,
-                SUM(CASE WHEN r.sentiment = 'Negative' THEN 1 ELSE 0 END) as negative_count,
-                SUM(CASE WHEN r.sentiment = 'Neutral' THEN 1 ELSE 0 END) as neutral_count
-            FROM products p
-            LEFT JOIN reviews r ON p.id = r.product_id
-            WHERE p.product_name ILIKE %s
-            GROUP BY p.id, p.product_name, p.source, p.title, p.price, p.overall_rating, p.total_reviews
-            ORDER BY p.scraped_at DESC
-        """, (f"%{search_term}%",))
-
-        products = cur.fetchall()
-
-        result = []
-        for p in products:
-            total = p['review_count'] or 1
-            positive_pct = round((p['positive_count'] / total) * 100)
-
-            result.append({
-                "id": p['id'],
-                "name": p['product_name'],
-                "source": p['source'],
-                "title": p['title'],
-                "price": p['price'],
-                "rating": p['overall_rating'],
-                "reviews": p['review_count'],
-                "positive": positive_pct,
-                "badge": f"{positive_pct}% Positive",
-                "badgeType": "positive" if positive_pct >= 60 else "negative" if positive_pct < 40 else "trending"
-            })
-
-        return result
-
-    except Exception as e:
-        print(f"[DB] Error fetching product summary ❌: {e}")
-        return []
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-# ──────────────────────────────────────────────
 #  MAIN FUNCTION — Called by Backend/Scraper
 # ──────────────────────────────────────────────
 
@@ -496,3 +429,43 @@ if __name__ == "__main__":
     # Step 5 — Get sentiment summary
     summary = get_sentiment_summary("iphone 15")
     print(f"\nSentiment Summary: {summary}")
+
+def get_products_summary(search_term=""):
+    conn = get_connection()
+    if not conn:
+        return []
+    try:
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute("""
+            SELECT 
+                p.id, p.product_name, p.source, p.title, p.price,
+                p.overall_rating, p.total_reviews,
+                COUNT(r.id) as review_count,
+                SUM(CASE WHEN r.sentiment = 'Positive' THEN 1 ELSE 0 END) as positive_count,
+                SUM(CASE WHEN r.sentiment = 'Negative' THEN 1 ELSE 0 END) as negative_count,
+                SUM(CASE WHEN r.sentiment = 'Neutral' THEN 1 ELSE 0 END) as neutral_count
+            FROM products p
+            LEFT JOIN reviews r ON p.id = r.product_id
+            WHERE p.product_name ILIKE %s
+            GROUP BY p.id, p.product_name, p.source, p.title, p.price, p.overall_rating, p.total_reviews
+            ORDER BY p.scraped_at DESC
+        """, (f"%{search_term}%",))
+        products = cur.fetchall()
+        result = []
+        for p in products:
+            total = p['review_count'] or 1
+            positive_pct = round((p['positive_count'] / total) * 100)
+            result.append({
+                "id": p['id'], "name": p['product_name'], "source": p['source'],
+                "title": p['title'], "price": p['price'], "rating": p['overall_rating'],
+                "reviews": p['review_count'], "positive": positive_pct,
+                "badge": f"{positive_pct}% Positive",
+                "badgeType": "positive" if positive_pct >= 60 else "negative" if positive_pct < 40 else "trending"
+            })
+        return result
+    except Exception as e:
+        print(f"[DB] Error fetching product summary: {e}")
+        return []
+    finally:
+        cur.close()
+        conn.close()
