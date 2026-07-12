@@ -97,8 +97,11 @@ const Dashboard = () => {
               </button>
               <span className="font-extrabold text-primary text-xl">SentientAI</span>
             </div>
-            <h2 className="font-display-lg text-display-lg text-on-background text-3xl md:text-4xl font-bold">Sentiment Dashboard</h2>
-            <p className="text-on-surface-variant font-body-md text-body-md mt-1">Real-time emotional intelligence for your product ecosystem.</p>
+            <div className="flex items-center gap-3 flex-wrap">
+  <h2 className="font-display-lg text-display-lg text-on-background text-3xl md:text-4xl font-bold">Sentiment Dashboard</h2>
+  <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-extrabold uppercase tracking-wide border border-amber-300">Demo Data</span>
+</div>
+<p className="text-on-surface-variant font-body-md text-body-md mt-1">Real-time emotional intelligence for your product ecosystem.</p>
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
             <div className="glass-card px-4 py-2 rounded-full flex items-center gap-3 border border-outline-variant/30">

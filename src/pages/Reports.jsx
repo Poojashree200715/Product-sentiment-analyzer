@@ -78,9 +78,12 @@ const Reports = () => {
               <span className="material-symbols-outlined text-[14px]">chevron_right</span>
               <span className="font-bold text-primary">Reports</span>
             </nav>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-on-background font-display-lg leading-tight">
-              Sentiment Reports Hub
-            </h2>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-on-background font-display-lg leading-tight">
+                Sentiment Reports Hub
+              </h2>
+              <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-extrabold uppercase tracking-wide border border-amber-300">Demo Data</span>
+            </div>
             <p className="text-xs text-on-surface-variant font-medium mt-1">
               Aggregate, extract, and print executive summaries from customer review databases.
             </p>
@@ -148,16 +151,19 @@ const Reports = () => {
 
           {/* Tabular export column */}
           <div className="flex flex-col justify-between gap-4">
-            <div className="glass-card p-4 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/80 transition-all border-l-4 border-l-secondary-container bg-white/70 shadow-sm">
+            <a
+              href="http://127.0.0.1:8000/api/reports/export-csv"
+              className="glass-card p-4 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/80 transition-all border-l-4 border-l-secondary-container bg-white/70 shadow-sm no-underline"
+            >
               <div className="w-10 h-10 rounded-lg bg-secondary-container/20 text-secondary flex items-center justify-center">
                 <span className="material-symbols-outlined">csv</span>
               </div>
               <div className="flex-grow">
-                <h4 className="font-bold text-xs">Export CSV Sheet</h4>
+                <h4 className="font-bold text-xs text-on-surface">Export CSV Sheet</h4>
                 <p className="text-[10px] text-on-surface-variant font-medium">Raw reviews data</p>
               </div>
               <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-sm">download</span>
-            </div>
+            </a>
 
             <div className="glass-card p-4 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-white/80 transition-all border-l-4 border-l-tertiary-container bg-white/70 shadow-sm">
               <div className="w-10 h-10 rounded-lg bg-tertiary-container/10 text-tertiary flex items-center justify-center">

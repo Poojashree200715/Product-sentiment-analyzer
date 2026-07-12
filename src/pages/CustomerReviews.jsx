@@ -169,9 +169,12 @@ const CustomerReviews = () => {
               <span className="material-symbols-outlined text-[14px]">chevron_right</span>
               <span className="text-primary font-bold">Customer Reviews</span>
             </nav>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-on-background font-display-lg leading-tight">
-              Sentiment Analysis Feed
-            </h2>
+            <div className="flex items-center gap-3 flex-wrap">
+  <h2 className="text-2xl md:text-3xl font-extrabold text-on-background font-display-lg leading-tight">
+    Sentiment Analysis Feed
+  </h2>
+  <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-[10px] font-extrabold uppercase tracking-wide border border-amber-300">Demo Data</span>
+</div>
             <p className="text-xs text-on-surface-variant font-medium mt-1">
               Showing reviews for: <span className="text-primary font-bold">{currentProduct.name}</span>
             </p>

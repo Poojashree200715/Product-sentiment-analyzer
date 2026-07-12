@@ -7,7 +7,10 @@ from pydantic import BaseModel
 
 from . import data
 from .sentiment import analyze_text
-from database import get_reviews as db_get_reviews, get_sentiment_summary, save_product, save_reviews, get_products_summary
+from database import get_reviews as db_get_reviews, get_sentiment_summary, save_product, save_reviews, get_products_summary, get_all_reviews
+from fastapi.responses import StreamingResponse
+import csv
+import io
 
 app = FastAPI(
     title="Product Sentiment Analyzer API",
@@ -163,3 +166,23 @@ def generate_report(product_id: str = Query("aura-pro-max")):
         ],
         "conclusion": "Recommendation: review the flagged negative feedback for common failure themes.",
     }
+@app.get("/api/reports/export-csv")
+def export_csv(search: str = ""):
+    reviews = db_get_reviews(search) if search else get_all_reviews()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Product Name", "Source", "Review Title", "Review Body", "Rating", "Date", "Sentiment", "Sentiment Score", "Created At"])
+    for r in reviews:
+        writer.writerow([
+            r.get("id"), r.get("product_name"), r.get("source"),
+            r.get("review_title"), r.get("review_body"), r.get("review_rating"),
+            r.get("review_date"), r.get("sentiment"), r.get("sentiment_score"), r.get("created_at")
+        ])
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=reviews_export.csv"}
+    )
